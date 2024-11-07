@@ -34,7 +34,7 @@ namespace Test.Api.Controllers
 
         [HttpGet]
         [Route("checkanswer")]
-        public async Task<IActionResult> CheckAnswer([FromQuery] int answerId)
+        public async Task<IActionResult> CheckAnswer([FromQuery] Guid answerId)
         {
             try
             {

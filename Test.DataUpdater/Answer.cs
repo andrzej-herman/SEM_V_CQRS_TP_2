@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.Entity.Entities
+namespace Test.DataUpdater
 {
-    abstract public class BaseEntity
+    public class Answer
     {
         public int Id { get; set; }
+        public string? Content { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }

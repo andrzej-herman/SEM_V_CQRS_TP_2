@@ -1,15 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Test.Entity.Entities;
 
 namespace Test.Entity.Entities
 {
-	public class Answer : BaseEntity
+    [Table("Answers")]
+    public class Answer
 	{
+        [Column("AnswerId")]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        [Column("AnswerContent")]
+        [StringLength(300)]
         public string? Content { get; set; }
+
+        [Column("AnswerIsCorrect")]
         public bool IsCorrect { get; set; }
-        public int QuestionId { get; set; }
+
+        [ForeignKey("QuestionId")]
+        public Guid QuestionId { get; set; }
     }
 }

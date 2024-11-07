@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Test.Api.Database;
 using Test.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IQuizService, QuizService_SqlConnection>();
+builder.Services.AddDbContext<QuizContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+});
+builder.Services.AddScoped<IQuizService, QuizService_EF>();
 
 var app = builder.Build();
 

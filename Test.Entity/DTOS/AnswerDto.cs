@@ -8,7 +8,7 @@ namespace Test.Entity.DTOS
 {
     public class AnswerDto
     {
-        public int AnswerId { get; set; }
+        public Guid AnswerId { get; set; }
         public string? Content { get; set; }
         public int DisplayOrder { get; set; }
     }

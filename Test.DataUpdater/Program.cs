@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Data.SqlClient;
-using Test.Entity.Entities;
+using Test.DataUpdater;
 
 var path = "S:\\ZIMA 2024\\TECHNOLOGIE_INTERNETOWE\\questions.json";
 var text = File.ReadAllText(path);
@@ -14,30 +14,22 @@ connection.Open();
 foreach (var question in questions!)
 {
 	var properContent = question.Content!.Replace("'", "\"");
-	var query = $"INSERT INTO Questions VALUES ({question.Category}, '{properContent}')";
+	var questionGuid = Guid.NewGuid();	
+	var query = $"INSERT INTO Questions VALUES ('{questionGuid}', {question.Category}, '{properContent}')";
 	var commmand = new SqlCommand(query, connection);
 	var id = commmand.ExecuteNonQuery();
-	var qId = 0;
 	if (id != 0)
 	{
-		query = "SELECT TOP 1 QuestionId FROM Questions ORDER BY QuestionId DESC";
-		var command = new SqlCommand(query, connection);
-		var reader = command.ExecuteReader();
-		while(reader.Read())
-		{
-			qId = reader.GetInt32(0);
-		}
-
-		reader.Close();
 		var answerCount = 1;
 		foreach (var answer in question.Answers!)
 		{
-			properContent = answer.Content!.Replace("'", "\"");
+            var answerGuid = Guid.NewGuid();
+            properContent = answer.Content!.Replace("'", "\"");
 			var correct = answer.IsCorrect ? 1 : 0;
-			query = $"INSERT INTO Answers VALUES ('{properContent}', {correct}, {qId})";
-            command = new SqlCommand(query, connection);
-			command.ExecuteNonQuery();
-			Console.WriteLine($" Dodanp odpowiedź nr {answerCount} do pytania nr {count}");
+			var ansquery = $"INSERT INTO Answers VALUES ('{answerGuid}', '{properContent}', {correct}, '{questionGuid}')";
+            var answerCommand = new SqlCommand(ansquery, connection);
+            answerCommand.ExecuteNonQuery();
+			Console.WriteLine($" Dodano odpowiedź nr {answerCount} do pytania nr {count}");
 			answerCount++;
         }
 

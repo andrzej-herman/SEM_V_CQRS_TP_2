@@ -14,7 +14,7 @@ namespace Test.Api
                 {
                     AnswerId = answer.Id,
                     Content = answer.Content,
-                };    
+                };
                 answers.Add(dto);
             }
 
@@ -28,7 +28,6 @@ namespace Test.Api
 
             return new QuestionDto
             {
-                QuestionId = question.Id,
                 Category = question.Category,
                 Content = question.Content,
                 Answers = answers,
