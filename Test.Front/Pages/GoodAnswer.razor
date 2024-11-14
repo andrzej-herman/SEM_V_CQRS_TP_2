@@ -1,0 +1,18 @@
+﻿@page "/goodanswer"
+@inject NavigationManager NavigationManager
+
+<br />
+<h3>Brawo, to dobra odpowiedz</h3>
+<br/>
+
+<button class="btn btn-success" @onclick="() => NextQuestion()">Następne pytanie</button>
+
+
+@code {
+
+    protected void NextQuestion()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+}

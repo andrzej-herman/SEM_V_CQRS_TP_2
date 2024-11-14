@@ -12,6 +12,17 @@ builder.Services.AddDbContext<QuizContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 builder.Services.AddScoped<IQuizService, QuizService_EF>();
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy("San-Test-Api", policy => 
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
+    });
+});
+
+
 
 var app = builder.Build();
 
@@ -24,4 +35,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseCors("San-Test-Api");
 app.Run();

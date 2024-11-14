@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Test.Api.Services;
+using Test.Entity.DTOS;
 using Test.Entity.Entities;
 
 namespace Test.Api.Controllers
@@ -44,8 +45,16 @@ namespace Test.Api.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }
-            
+            }  
+        }
+
+
+        [HttpPost]
+        [Route("addquestion")]
+        public async Task<IActionResult> AddQuestion([FromBody] AddQuestionDto dto)
+        {
+            var result = await _quizService.AddQuestion(dto);
+            return result.Result ? Ok(result) : BadRequest(result); 
         }
 
     }

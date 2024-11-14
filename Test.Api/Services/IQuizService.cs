@@ -7,5 +7,6 @@ namespace Test.Api.Services
     {
         Task<QuestionDto> GetQuestionFromCategory(int category);
         Task<bool> CheckAnswer(Guid answerId);
+        Task<ResultDto> AddQuestion(AddQuestionDto dto);
     }
 }

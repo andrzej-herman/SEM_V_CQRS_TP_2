@@ -1,7 +1,102 @@
 ﻿@page "/"
+@using Newtonsoft.Json
+@using Test.Front.Models
+@inject IQuizData quizData  
+@inject ILocalStorageService Cookies
+@inject NavigationManager NavigationManager
 
-<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+@if (isLoading)
+{
+    <div style="padding:25px;display:flex; flex-direction:column; align-items: center; justify-content: center">
+        <h3 style="color:forestgreen">@loaderText</h3>
+    </div>
+}
+
+@if (currentQuestion != null && !isLoading)
+{
+    <div style="padding:50px;display:flex; flex-direction:column; align-items: center; justify-content: center">
+        <h4>Pytanie za @currentQuestion.Category pkt.</h4>
+        <h3>@currentQuestion.Content</h3>
+        <div style="display: flex; align-items: center; gap: 20px; padding: 100px">
+            @foreach (var answer in currentQuestion.Answers!)
+            {
+                <div class="answer-tile" @onclick="() => CheckAnswer(answer.AnswerId)">@answer.Content</div>
+            }
+        </div>
+    </div>
+}
+
+
+
+
+@code {
+
+    protected string loaderText { get; set; } = "Trwa ładowanie pytania ...";
+
+    protected bool isLoading { get; set; }
+
+    protected QuestionDto? currentQuestion { get; set; }
+
+    protected GameModel? GameModel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {     
+        loaderText = "Trwa ładowanie pytania ...";
+        isLoading = true;
+        await ReadGame();
+        var request = new GetQuestionRequest() { Category = GameModel!.CurrentCategory };
+        currentQuestion = await quizData.GetQuestion(request);
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    protected async Task CheckAnswer(Guid answerId)
+    {
+        loaderText = "Trwa sprawdzanie odpowiedzi ...";
+        isLoading = true;
+        var request = new CheckAnswerRequest() { AnswerId = answerId };
+        var result = await quizData.CheckAnswer(request);
+        if (result)
+        {
+            GameModel!.PlayerPoints += currentQuestion!.Category;
+            GameModel!.CurrentCategory = 200;
+            await SaveGame();
+            NavigationManager.NavigateTo("/goodanswer");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/gameover");
+        }
+       
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    protected async Task SaveGame()
+    {
+        if (GameModel == null)
+        {
+            GameModel = new GameModel() { CurrentCategory = 100, PlayerPoints = 0 };
+        }
+
+        var json = JsonConvert.SerializeObject(GameModel);
+        await Cookies.SetItemAsync("__sangamemodel", json);
+    }
+
+    protected async Task ReadGame()
+    {
+        var json = await Cookies.GetItemAsync<string>("__sangamemodel");
+        if (json == null)
+        {
+            GameModel = new GameModel() { CurrentCategory = 100, PlayerPoints = 0 };
+        }
+        else
+        {
+            GameModel = JsonConvert.DeserializeObject<GameModel>(json);
+        }
+    }
+
+
+}

@@ -1,8 +1,7 @@
 ﻿using Test.Entity.DTOS;
 using Test.Entity.Entities;
 
-namespace Test.Api
-{
+namespace Test.Apierw{
     public static class Mapper
     {
         public static QuestionDto ToDto(Question question, Random rnd)
@@ -13,7 +12,7 @@ namespace Test.Api
                 var dto = new AnswerDto
                 {
                     AnswerId = answer.Id,
-                    Content = answer.Content,
+                    Content = answer.Content, 
                 };
                 answers.Add(dto);
             }

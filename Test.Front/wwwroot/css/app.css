@@ -101,3 +101,18 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.answer-tile {
+    background-color: lightblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    padding: 5px 20px 5px 20px;
+    width: 300px;
+    cursor: pointer;
+}
+
+.answer-tile:hover {
+    background-color: lightgreen;
+}
