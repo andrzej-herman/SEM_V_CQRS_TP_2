@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Test.Api.Services;
 using Test.Entity.DTOS;
-using Test.Entity.Entities;
 
 namespace Test.Api.Controllers
 {
@@ -24,7 +23,7 @@ namespace Test.Api.Controllers
             try
             {
                 var result = await _quizService.GetQuestionFromCategory(category);
-                return Ok(result);
+                return result != null ? Ok(result) : BadRequest("Nieprawid³owa kategoria pytania");
             }
             catch (Exception ex)
             {
@@ -35,11 +34,11 @@ namespace Test.Api.Controllers
 
         [HttpGet]
         [Route("checkanswer")]
-        public async Task<IActionResult> CheckAnswer([FromQuery] Guid answerId)
+        public async Task<IActionResult> CheckAnswer([FromQuery] Guid answerId, int category)
         {
             try
             {
-                var result = await _quizService.CheckAnswer(answerId);
+                var result = await _quizService.CheckAnswer(answerId, category);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -47,15 +46,5 @@ namespace Test.Api.Controllers
                 return BadRequest(ex.Message);
             }  
         }
-
-
-        [HttpPost]
-        [Route("addquestion")]
-        public async Task<IActionResult> AddQuestion([FromBody] AddQuestionDto dto)
-        {
-            var result = await _quizService.AddQuestion(dto);
-            return result.Result ? Ok(result) : BadRequest(result); 
-        }
-
     }
 }

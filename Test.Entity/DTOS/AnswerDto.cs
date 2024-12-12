@@ -10,6 +10,5 @@ namespace Test.Entity.DTOS
     {
         public Guid AnswerId { get; set; }
         public string? Content { get; set; }
-        public int DisplayOrder { get; set; }
     }
 }

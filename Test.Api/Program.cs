@@ -1,17 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using Test.Api.Database;
+
+using SwaggerThemes;
 using Test.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<QuizContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
-});
-builder.Services.AddScoped<IQuizService, QuizService_EF>();
+builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddCors(options => 
 {
     options.AddPolicy("San-Test-Api", policy => 
@@ -22,14 +17,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(Theme.OneDark);
 }
 
 app.UseHttpsRedirection();
